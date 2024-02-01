@@ -1,7 +1,6 @@
 import {useRef,useEffect, useState} from 'react'
 import Webcam from 'react-webcam'
 import { FaCircle } from "react-icons/fa";
-import HomeImage from '../homeImage.jpg'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 

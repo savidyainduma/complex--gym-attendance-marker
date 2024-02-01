@@ -1,12 +1,13 @@
 import React from 'react'
 import Login from './components/Login'
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
-import Signup from './components/Signup'
+import Signup from './components/AddMember'
 import Home from './components/Home'
 import Front from './components/FrontPage'
 import Logo from './logo.png'
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import AdminLogin from './components/AdminLogin'
+import AddMember from './components/AddMember'
 
 
 
@@ -17,7 +18,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Front />}></Route>
           <Route path='/adminlogin' element={<AdminLogin />}></Route>
-          <Route path='/signup' element={<Signup />}></Route>
+          <Route path='/admin/addmember' element={<AddMember />}></Route>
           <Route path='/home' element={<Home />}></Route>
         </Routes>
         </BrowserRouter>

@@ -35,8 +35,8 @@ const Header = () => {
         </div>
         
         <div className='bodyFont flex justify-between items-center gap-14 mr-2'>
-          <p>About</p>
-          <button className='border-2 px-7 py-[6px] rounded-md'>Log in</button>
+          <p className='hover:underline underline-offset-8 cursor-pointer'>About</p>
+          <button className='border-2 px-7 py-[6px] rounded-md hover:bg-[#ff2d2e]'>Log in</button>
         </div>
       
       </div>

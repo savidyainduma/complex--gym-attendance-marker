@@ -8,6 +8,7 @@ import Logo from './logo.png'
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import AdminLogin from './components/AdminLogin'
 import AddMember from './components/AddMember'
+import AdminDashboard from './components/AdminDashboard'
 
 
 
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Front />}></Route>
           <Route path='/adminlogin' element={<AdminLogin />}></Route>
+          <Route path='/admin/dashboard' element={<AdminDashboard />}></Route>
           <Route path='/admin/addmember' element={<AddMember />}></Route>
           <Route path='/home' element={<Home />}></Route>
         </Routes>

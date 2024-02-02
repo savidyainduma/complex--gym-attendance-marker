@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import HomeImage from '../homeImage.jpg'
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 
 const Front = () => {
-
+  const navigate = useNavigate("/adminlogin");
   return (
     
     <div>
@@ -21,7 +22,7 @@ const Front = () => {
                 <div>Faster community, stay motivated and </div>
                 <div>achive fitness goals together</div>
               </div>
-              <div><button className='font-semibold text-base bg-[#ff2d2e] px-10 py-2 hover:rounded-bl-3xl hover:rounded-tr-3xl transition-all duration-300'>Let's Goo!</button></div>
+              <div><button onClick={()=>{navigate("/home")}}className='font-semibold text-base bg-[#ff2d2e] px-10 py-2 hover:rounded-bl-3xl hover:rounded-tr-3xl transition-all duration-300'>Let's Goo!</button></div>
           </div>
           <div>
               <div className='border-4'>

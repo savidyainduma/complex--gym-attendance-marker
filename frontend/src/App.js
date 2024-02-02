@@ -9,6 +9,7 @@ import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import AdminLogin from './components/AdminLogin'
 import AddMember from './components/AddMember'
 import AdminDashboard from './components/AdminDashboard'
+import LoginIdentifier from './components/LoginIdentifier'
 
 
 
@@ -21,7 +22,7 @@ function App() {
           <Route path='/adminlogin' element={<AdminLogin />}></Route>
           <Route path='/admin/dashboard' element={<AdminDashboard />}></Route>
           <Route path='/admin/addmember' element={<AddMember />}></Route>
-          <Route path='/home' element={<Home />}></Route>
+          <Route path='/home' element={<LoginIdentifier />}></Route>
         </Routes>
         </BrowserRouter>
     </div>

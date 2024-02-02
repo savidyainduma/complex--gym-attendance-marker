@@ -16,7 +16,7 @@ const db =  mysql.createConnection({
     database: "complex"
 })
 
-const currentDate = new Date().toISOString();
+
 
 // const storage_maker = (folderName)=>(multer.diskStorage({
 //     destination: (req, file, callback) => {
@@ -47,7 +47,7 @@ app.post('/signup', (req, res) => {
     if (req.body.name === undefined || req.body.regNo === undefined)
         return res.status(401).json({status:"missing parameters"});
 
-    const sql = `INSERT INTO student (reg_number, name, email, phone_number, membership) VALUES ('${req.body.regNo}','${req.body.name}','${req.body.email}','${req.body.phoneNo}','${req.body.membership}')`
+    const sql = `INSERT INTO student (reg_number, name, email, phone_number) VALUES ('${req.body.regNo}','${req.body.name}','${req.body.email}','${req.body.phoneNo}')`
 
     db.query(sql,(err, result)=>{
         if(err) {
@@ -63,6 +63,7 @@ app.post('/signup', (req, res) => {
 app.post("/student_in/:studentRegNo",(req,res)=>{
     const studentRegNo = req.params['studentRegNo']
 
+    const currentDate = new Date().toISOString();
     const sql = `INSERT INTO attendance(reg_number, student_in) values ('${studentRegNo}','${currentDate}')`
 
     db.query(sql,(err, result)=>{
@@ -75,6 +76,7 @@ app.post("/student_in/:studentRegNo",(req,res)=>{
 app.post("/student_out/:studentRegNo",(req,res)=>{
     const studentRegNo = req.params['studentRegNo']
 
+    const currentDate = new Date().toISOString();
     const sql = `UPDATE attendance SET student_out = '${currentDate}' WHERE reg_number = '${studentRegNo}' `
 
 

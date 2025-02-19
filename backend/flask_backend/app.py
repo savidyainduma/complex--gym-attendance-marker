@@ -40,10 +40,10 @@ def train_model():
             print(f"Gathering {imgname} from {user} ")
             img = cv2.imread(f'static/faces/{user}/{imgname}')
             resized_face = cv2.resize(img, (50, 50))
-            faces.append(resized_face.ravel())
+            faces.append(resized_face.ravel()) # meken mokadda wenne 
             labels.append(user)
-    faces = np.array(faces)
-    knn = KNeighborsClassifier(n_neighbors=5)
+    faces = np.array(faces) # meken mokadda wenne
+    knn = KNeighborsClassifier(n_neighbors=5) # meken mokadda
     knn.fit(faces, labels)
     joblib.dump(knn, 'static/face_recognition_model.pkl')
     print("model saved")
@@ -62,7 +62,9 @@ def mark_attendance():
     image = cv2.imread("temp/image.jpg")
 
     face = cv2.resize(image, (50, 50))
-    identified_person = identify_face(face.reshape(1, -1))[0]
+    prediction = identify_face(face.reshape(1, -1))
+    print("Prediction", prediction)
+    identified_person = prediction[0]
     return  jsonify({"name":identified_person})
 
 
@@ -72,7 +74,7 @@ def register():
     image = res['images'][0]
     name = res['name']
     if not name:
-        return jsonify({"status":"missing args"}), 401
+        return jsonify({"status":"missing args"}), 400
     
     userimagefolder = 'static/faces/'+name
     if not os.path.isdir(userimagefolder):

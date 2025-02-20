@@ -6,6 +6,7 @@ import Webcam from "react-webcam";
 import IdleImage from "../idle.jpg";
 import Swal from "sweetalert2";
 import "../stylesheets/styles.css";
+import HomeIcon from "@mui/icons-material/Home";
 
 function LoginIdentifier() {
   const Toast = Swal.mixin({
@@ -28,25 +29,41 @@ function LoginIdentifier() {
     let studentsList = localStorage.getItem("students");
     if (!studentsList) return;
 
-    setInStudents(JSON.parse(studentsList));
-
-    return () => {
-      if (inStudents.length === 0) return;
-      localStorage.setItem("students", inStudents);
-    };
+    setInStudents(studentsList.split(","));
   }, []);
+
+  useEffect(() => {
+    if (inStudents.length === 0) {
+      localStorage.removeItem("students");
+    }
+    localStorage.setItem("students", inStudents);
+  }, [inStudents]);
 
   const studentIn = async (regNo) => {
     await axios
       .post(`http://localhost:8081/student_in/${regNo}`)
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        Toast.fire({
+          position: "right",
+          icon: "success",
+          title: `Hello ${regNo}!`,
+        });
+        setInStudents((prevState) => [...prevState, regNo]);
+      })
       .catch((err) => console.log(err));
   };
 
   const studentOut = async (regNo) => {
     await axios
       .post(`http://localhost:8081/student_out/${regNo}`)
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        Toast.fire({
+          position: "right",
+          icon: "success",
+          title: `Good Bye ${regNo}!`,
+        });
+        setInStudents(inStudents.filter((studentId) => studentId !== regNo));
+      })
       .catch((err) => console.log(err));
   };
 
@@ -64,23 +81,9 @@ function LoginIdentifier() {
           console.log(res.data["name"]);
           const regNo = res.data["name"];
           if (inStudents.includes(regNo)) {
-            Toast.fire({
-              position: "right",
-              icon: "success",
-              title: `Good Bye ${regNo}!`,
-            });
             studentOut(regNo);
-            setInStudents(
-              inStudents.filter((studentId) => studentId !== regNo)
-            );
           } else {
-            Toast.fire({
-              position: "right",
-              icon: "success",
-              title: `Hello ${regNo}!`,
-            });
             studentIn(regNo);
-            setInStudents((prevState) => [...prevState, regNo]);
           }
         }
       });
@@ -88,6 +91,18 @@ function LoginIdentifier() {
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center bg-opacity-0 backdrop-blur-md">
+      <div>
+        <HomeIcon
+          onClick={() => navigate("/")}
+          style={{
+            color: "red",
+            marginRight: "90vw",
+            fontSize: "45px",
+            cursor: "pointer",
+          }}
+        />
+      </div>
+
       <div className="bg-grey rounded-xl drop-shadow-2xl p-5 flex flex-col justify-center items-center">
         <Webcam
           ref={webcamRef}

@@ -3,32 +3,33 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const AttendanceViewer = () => {
+const AllMembersViewer = () => {
   const [rows, setRows] = useState([]);
 
   const columns = [
-    { field: "reg_number", headerName: "Registration No", width: 300 },
+    { field: "reg_number", headerName: "Registration No", width: 200 },
     {
-      field: "student_in",
-      headerName: "Student In",
+      field: "name",
+      headerName: "Name",
       width: 300,
-      valueGetter: (value, row) =>
-        `${value?.substring(0, 19).replace("T", " ") || "-"}`,
     },
     {
-      field: "student_out",
-      headerName: "Student Out",
+      field: "email",
+      headerName: "Email",
       width: 300,
-      valueGetter: (value, row) =>
-        `${value?.substring(0, 19).replace("T", " ") || "-"}`,
+    },
+    {
+      field: "phone_number",
+      headerName: "Phone Number",
+      width: 200,
     },
   ];
 
   useEffect(() => {
     const getAllAttendance = async () => {
       try {
-        const response = await axios.get("http://localhost:8081/getAttendance");
-        setRows(response.data);
+        const response = await axios.get("http://localhost:8081/getAllMembers");
+        setRows(response.data.map((data, index) => ({ ...data, id: index })));
       } catch (e) {
         console.error("Something happened", e);
       }
@@ -52,4 +53,4 @@ const AttendanceViewer = () => {
   );
 };
 
-export default AttendanceViewer;
+export default AllMembersViewer;

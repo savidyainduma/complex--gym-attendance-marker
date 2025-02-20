@@ -19,11 +19,14 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import AttendanceViewer from "./AttendanceViewer";
+import AllMembersViewer from "./AllMemebersViewer";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [number1, setNumber1] = useState(0);
   const [number2, setNumber2] = useState(0);
+  const [currentRoute, setCurrentRoute] = useState("home");
 
   useEffect(() => {
     axios
@@ -53,15 +56,20 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    const interval1 = setInterval(() => {
-      setNumber1((prev) => {
-        if (prev < 100) return prev + 1; // increase until 100
-        clearInterval(interval1);
-        return prev;
+    axios
+      .get("http://localhost:8081/getActiveCount")
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("number2: ", res.data.count);
+          animateCount(res.data.count, setNumber1);
+        } else {
+          alert("No record existed.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching count:", err);
+        alert("Failed to fetch data.");
       });
-    }, 50); // Adjust speed by changing the interval
-
-    return () => clearInterval(interval1); // Cleanup on component unmount
   }, []);
 
   return (
@@ -76,7 +84,13 @@ const AdminDashboard = () => {
             />
             <Typography
               variant="h6"
-              sx={{ flexGrow: 1, marginLeft: "20px", fontSize: "25px" }}
+              sx={{
+                flexGrow: 1,
+                marginLeft: "20px",
+                fontSize: "25px",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("/")}
             >
               COMPLEX
             </Typography>
@@ -108,11 +122,12 @@ const AdminDashboard = () => {
             display: "flex",
             flexDirection: "column",
             backgroundColor: "#2E2E2E",
+            color: "white",
           }}
         >
           <IconButton
             color="inherit"
-            sx={{ marginTop: "90px", padding: 2, color: "white" }}
+            sx={{ marginTop: "50px", padding: 2, color: "white" }}
           >
             <AccountCircle sx={{ fontSize: 70 }} />
           </IconButton>
@@ -140,7 +155,7 @@ const AdminDashboard = () => {
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText primary="Home" />
+              <ListItemText primary="Sign out" />
             </ListItem>
             <ListItem
               button
@@ -151,11 +166,44 @@ const AdminDashboard = () => {
                   color: "white",
                 },
               }}
+              onClick={() => setCurrentRoute("home")}
+            >
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+            <ListItem
+              button
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "#ff2d2e",
+                  color: "white",
+                },
+              }}
+              onClick={() => setCurrentRoute("allmembers")}
             >
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="All Members" />
+            </ListItem>
+            <ListItem
+              button
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "#ff2d2e",
+                  color: "white",
+                },
+              }}
+              onClick={() => setCurrentRoute("attendance")}
+            >
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="All Attendance" />
             </ListItem>
             <ListItem
               button
@@ -180,41 +228,53 @@ const AdminDashboard = () => {
         <Paper
           sx={{
             position: "absolute",
-            top: "10vh",
+            top: "12vh",
             right: "1vw",
             padding: 3,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             width: "80vw",
-            height: "40vw",
+            height: "85vh",
             backgroundColor: "#2E2E2E",
           }}
         >
-          <div style={{ display: "flex", gap: "4vw" }}>
-            <div style={{ marginTop: "20vh" }}>
-              <Typography
-                variant="h2"
-                sx={{ marginBottom: 2, textAlign: "center", color: "white" }}
-              >
-                {number1}
-              </Typography>
-              <Typography variant="h4" sx={{ marginBottom: 2, color: "white" }}>
-                Active members
-              </Typography>
+          {currentRoute === "home" ? (
+            <div style={{ display: "flex", gap: "4vw" }}>
+              <div style={{ marginTop: "20vh" }}>
+                <Typography
+                  variant="h2"
+                  sx={{ marginBottom: 2, textAlign: "center", color: "white" }}
+                >
+                  {number1}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  sx={{ marginBottom: 2, color: "white" }}
+                >
+                  Active members
+                </Typography>
+              </div>
+              <div style={{ marginTop: "20vh" }}>
+                <Typography
+                  variant="h2"
+                  sx={{ marginBottom: 2, textAlign: "center", color: "white" }}
+                >
+                  {number2}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  sx={{ marginBottom: 2, color: "white" }}
+                >
+                  Total members
+                </Typography>
+              </div>
             </div>
-            <div style={{ marginTop: "20vh" }}>
-              <Typography
-                variant="h2"
-                sx={{ marginBottom: 2, textAlign: "center", color: "white" }}
-              >
-                {number2}
-              </Typography>
-              <Typography variant="h4" sx={{ marginBottom: 2, color: "white" }}>
-                Total members
-              </Typography>
-            </div>
-          </div>
+          ) : currentRoute === "attendance" ? (
+            <AttendanceViewer />
+          ) : (
+            <AllMembersViewer />
+          )}
         </Paper>
       </div>
     </>

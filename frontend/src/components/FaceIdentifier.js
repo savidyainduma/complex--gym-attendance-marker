@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../stylesheets/styles.css";
 
-function FaceExtraction({ regNo }) {
+function FaceExtraction({ regNo, setIsRegistered, setForm }) {
   const navigate = useNavigate();
   const webcamRef = useRef(null);
   const [picture, setPicture] = useState([]);
@@ -26,6 +26,7 @@ function FaceExtraction({ regNo }) {
   });
 
   const handleClick = () => {
+    if (captureClicked) return;
     setCaptureClicked(true);
     setIntervalId(setInterval(capture, 700)); // Call handleClick every 2 seconds
   };
@@ -55,11 +56,24 @@ function FaceExtraction({ regNo }) {
           if (res.status === 200) {
             Toast.fire({
               icon: "success",
-              title: "Registration Success",
+              title: "Image Registration Success",
+            });
+
+            setIsRegistered(false);
+            setForm({
+              name: "",
+              regNo: "",
+              email: "",
+              phoneNo: "",
             });
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          Toast.fire({
+            icon: "error",
+            title: "Image Registration Unsuccessful",
+          });
+        });
     }
   });
 

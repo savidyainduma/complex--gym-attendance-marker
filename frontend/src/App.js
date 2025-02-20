@@ -10,20 +10,29 @@ import AdminLogin from "./components/AdminLogin";
 import AddMember from "./components/AddMember";
 import AdminDashboard from "./components/AdminDashboard";
 import LoginIdentifier from "./components/LoginIdentifier";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 function App() {
   return (
-    <div className=" h-screen w-full">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Front />}></Route>
-          <Route path="/adminlogin" element={<AdminLogin />}></Route>
-          <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
-          <Route path="/admin/addmember" element={<AddMember />}></Route>
-          <Route path="/home" element={<LoginIdentifier />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <div className=" h-screen w-full">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Front />}></Route>
+            <Route path="/adminlogin" element={<AdminLogin />}></Route>
+            <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
+            <Route path="/admin/addmember" element={<AddMember />}></Route>
+            <Route path="/home" element={<LoginIdentifier />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </ThemeProvider>
   );
 }
 

@@ -60,11 +60,14 @@ app.post("/signup", (req, res) => {
 app.post("/student_in/:studentRegNo", (req, res) => {
   const studentRegNo = req.params["studentRegNo"];
 
-  const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+  const currentDate = new Date().toLocaleString();
   const sql = `INSERT INTO attendance(reg_number, student_in) values ('${studentRegNo}','${currentDate}')`;
 
   db.query(sql, (err, result) => {
-    if (err) return res.status(500).send({ status: "failed" });
+    if (err) {
+      console.log("Error", err);
+      return res.status(500).send({ status: "failed" });
+    }
     return res.status(200).send({ status: "success" });
   });
 });
@@ -72,7 +75,7 @@ app.post("/student_in/:studentRegNo", (req, res) => {
 app.post("/student_out/:studentRegNo", (req, res) => {
   const studentRegNo = req.params["studentRegNo"];
 
-  const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+  const currentDate = new Date().toLocaleString();
   const sql = `UPDATE attendance SET student_out = '${currentDate}' WHERE reg_number = '${studentRegNo}' AND student_out IS NULL `;
 
   db.query(sql, (err, result) => {
@@ -121,6 +124,58 @@ app.get("/getAllCount", async (req, res) => {
   }
 });
 
+app.get("/getAttendance", async (req, res) => {
+  try {
+    console.log("Route /getAllCount hit");
+    const query = "SELECT * FROM attendance";
+
+    db.query(query, (err, result) => {
+      if (err) {
+        throw err; // Throw error to be caught by the catch block
+      }
+
+      res.status(200).json(result); // Send the count in the response
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/getAllMembers", async (req, res) => {
+  try {
+    console.log("Route /getAllCount hit");
+    const query = "SELECT * FROM student";
+
+    db.query(query, (err, result) => {
+      if (err) {
+        throw err; // Throw error to be caught by the catch block
+      }
+
+      res.status(200).json(result); // Send the count in the response
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/getActiveCount", async (req, res) => {
+  try {
+    console.log("Route /getAllCount hit");
+    const query =
+      "SELECT COUNT(*) AS active FROM attendance WHERE student_out IS NULL";
+
+    db.query(query, (err, result) => {
+      if (err) {
+        throw err; // Throw error to be caught by the catch block
+      }
+
+      const count = result[0].active;
+      res.status(200).json({ count }); // Send the count in the response
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 // const uploads = multer({ storage: upload_storage })
 
 // app.post("/upload_images", uploads.array("images"), (req,res)=>{

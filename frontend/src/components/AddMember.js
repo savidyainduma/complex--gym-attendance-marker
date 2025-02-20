@@ -5,8 +5,22 @@ import { useState } from "react";
 import axios from "axios";
 import FaceExtraction from "./FaceIdentifier";
 import Header from "./Header";
+import Swal from "sweetalert2";
+import "../stylesheets/styles.css";
 
 function AddMember() {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    iconColor: "white",
+    customClass: {
+      popup: "colored-toast",
+    },
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+  });
+
   const [isRegistered, setIsRegistered] = useState(false);
   const [values, SetValues] = useState({
     name: "",
@@ -39,9 +53,17 @@ function AddMember() {
         if (res.status === 200) {
           console.log("Registration success...");
           setIsRegistered(true);
+          Toast.fire({
+            icon: "success",
+            title: "Registration Success",
+          });
         }
       } catch (err) {
         console.log(err);
+        Toast.fire({
+          icon: "error",
+          title: "Registration Unsuccessful",
+        });
       }
     } else {
       console.log("Validation errors:", validationErrors);
@@ -67,6 +89,7 @@ function AddMember() {
                 type="text"
                 placeholder="Full Name"
                 name="name"
+                disabled={isRegistered}
                 className={textBoxStyle}
                 onChange={handleInput}
               />
@@ -77,6 +100,7 @@ function AddMember() {
                 type="text"
                 placeholder="Registration Number"
                 name="regNo"
+                disabled={isRegistered}
                 className={textBoxStyle}
                 onChange={handleInput}
               />
@@ -87,6 +111,7 @@ function AddMember() {
                 type="text"
                 placeholder="Contact Number"
                 name="phoneNo"
+                disabled={isRegistered}
                 className={textBoxStyle}
                 onChange={handleInput}
               />
@@ -96,6 +121,7 @@ function AddMember() {
                 type="email"
                 placeholder="Email"
                 name="email"
+                disabled={isRegistered}
                 className={textBoxStyle}
                 onChange={handleInput}
               />
@@ -104,15 +130,24 @@ function AddMember() {
 
             <button
               type="submit"
-              className="bg-[#ff2d2e] text-lg w-96 py-3 rounded-md text-white hover:bg-black"
+              className={`${
+                !isRegistered ? "bg-[#ff2d2e] hover:bg-black" : "bg-neutral-500"
+              } text-lg w-96 py-3 rounded-md text-white `}
               onClick={handleSubmit}
+              disabled={isRegistered}
             >
-              ADD
+              NEXT
             </button>
           </form>
         </div>
 
-        <FaceExtraction regNo={values["regNo"]} />
+        {isRegistered && (
+          <FaceExtraction
+            regNo={values["regNo"]}
+            setIsRegistered={setIsRegistered}
+            setForm={SetValues}
+          />
+        )}
       </div>
     </div>
   );

@@ -40,10 +40,10 @@ def train_model():
             print(f"Gathering {imgname} from {user} ")
             img = cv2.imread(f'static/faces/{user}/{imgname}')
             resized_face = cv2.resize(img, (50, 50))
-            faces.append(resized_face.ravel()) # meken mokadda wenne 
+            faces.append(resized_face.ravel()) 
             labels.append(user)
-    faces = np.array(faces) # meken mokadda wenne
-    knn = KNeighborsClassifier(n_neighbors=5) # meken mokadda
+    faces = np.array(faces)
+    knn = KNeighborsClassifier(n_neighbors=5)
     knn.fit(faces, labels)
     joblib.dump(knn, 'static/face_recognition_model.pkl')
     print("model saved")
